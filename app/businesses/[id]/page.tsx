@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation"; // ✅ Import useParams properly
+import { useParams, useRouter } from "next/navigation"; // ✅ Correct Imports
 import AnimatedButton from "../../components/AnimatedButton"; 
 import ConfirmDelete from "../../components/ConfirmDelete"; 
 
@@ -16,7 +16,7 @@ type Business = {
 };
 
 export default function BusinessDetails() {
-    const params = useParams();
+    const params = useParams(); // ✅ Get params from Next.js
     const businessId = params?.id as string; // ✅ Ensure `id` is a string
     const [business, setBusiness] = useState<Business | null>(null);
     const [error, setError] = useState("");
@@ -29,6 +29,7 @@ export default function BusinessDetails() {
     const userId = storedUserId ? parseInt(storedUserId, 10) : null;
 
     useEffect(() => {
+        if (!businessId) return;
         fetch(`http://localhost:5000/businesses/${businessId}`)
             .then(response => response.json())
             .then(data => {
