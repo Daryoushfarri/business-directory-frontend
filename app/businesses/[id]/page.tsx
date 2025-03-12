@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import AnimatedButton from "../../components/AnimatedButton"; // ✅ Import Animated Button
-import ConfirmDelete from "../../components/ConfirmDelete"; // ✅ Import Delete Confirmation
+import { useParams, useRouter } from "next/navigation"; // ✅ Import useParams properly
+import AnimatedButton from "../../components/AnimatedButton"; 
+import ConfirmDelete from "../../components/ConfirmDelete"; 
 
 type Business = {
     id: number;
@@ -15,7 +15,9 @@ type Business = {
     owner_id: number;
 };
 
-export default function BusinessDetails({ params }: { params: { id: string } }) {
+export default function BusinessDetails() {
+    const params = useParams();
+    const businessId = params?.id as string; // ✅ Ensure `id` is a string
     const [business, setBusiness] = useState<Business | null>(null);
     const [error, setError] = useState("");
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -27,7 +29,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
     const userId = storedUserId ? parseInt(storedUserId, 10) : null;
 
     useEffect(() => {
-        fetch(`http://localhost:5000/businesses/${params.id}`)
+        fetch(`http://localhost:5000/businesses/${businessId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -37,10 +39,10 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
                 }
             })
             .catch(() => setError("Failed to load business details."));
-    }, [params.id]);
+    }, [businessId]); // ✅ Correct dependency
 
     const handleEdit = () => {
-        router.push(`/edit-business/${params.id}`);
+        router.push(`/edit-business/${businessId}`);
     };
 
     const handleDelete = async () => {
@@ -49,7 +51,7 @@ export default function BusinessDetails({ params }: { params: { id: string } }) 
             return;
         }
 
-        const response = await fetch(`http://localhost:5000/businesses/${params.id}`, {
+        const response = await fetch(`http://localhost:5000/businesses/${businessId}`, {
             method: "DELETE",
             headers: { "Authorization": `Bearer ${token}` }
         });
