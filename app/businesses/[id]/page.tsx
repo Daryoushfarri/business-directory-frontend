@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation"; // ✅ Correct Imports
+import { useParams, useRouter } from "next/navigation"; // ✅ Correct import
 import AnimatedButton from "../../components/AnimatedButton"; 
 import ConfirmDelete from "../../components/ConfirmDelete"; 
 
@@ -24,10 +24,6 @@ export default function BusinessDetails() {
     const router = useRouter();
 
     // ✅ Get User ID & Token from Local Storage
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-    const userId = storedUserId ? parseInt(storedUserId, 10) : null;
-
     useEffect(() => {
         if (!businessId) return;
         fetch(`http://localhost:5000/businesses/${businessId}`)
@@ -40,7 +36,11 @@ export default function BusinessDetails() {
                 }
             })
             .catch(() => setError("Failed to load business details."));
-    }, [businessId]); // ✅ Correct dependency
+    }, [businessId]);
+
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const storedUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+    const userId = storedUserId ? parseInt(storedUserId, 10) : null;
 
     const handleEdit = () => {
         router.push(`/edit-business/${businessId}`);
