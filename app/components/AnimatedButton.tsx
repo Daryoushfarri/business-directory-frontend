@@ -3,14 +3,16 @@
 import { ReactNode } from "react";
 
 interface AnimatedButtonProps {
-    onClick: () => void;
-    children: ReactNode;  // ✅ Fix: Explicitly define children as ReactNode
+    onClick?: () => void;
+    children: ReactNode;  // ✅ Ensure children is properly typed
     style?: React.CSSProperties;
+    type?: "button" | "submit" | "reset";  // ✅ Allow button types
 }
 
-export default function AnimatedButton({ onClick, children, style }: AnimatedButtonProps) {
+export default function AnimatedButton({ onClick, children, style, type = "button" }: AnimatedButtonProps) {
     return (
         <button
+            type={type}  // ✅ Ensures correct button behavior
             onClick={onClick}
             style={{
                 padding: "10px 15px",
@@ -24,10 +26,10 @@ export default function AnimatedButton({ onClick, children, style }: AnimatedBut
                 transform: "scale(1)",
                 ...style,
             }}
-            onMouseDown={(e) => e.currentTarget.style.transform = "scale(0.9)"}
-            onMouseUp={(e) => e.currentTarget.style.transform = "scale(1)"}
+            onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
+            onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-            {children}  {/* ✅ Fix: Now correctly accepts button text */}
+            {children}
         </button>
     );
 }
